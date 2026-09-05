@@ -17,6 +17,9 @@ export interface CaseRecord {
   state: string;
   crime_type: string;
   opened_on: string;
+  closed_on?: string;
+  punishment_type?: string;
+  photo_url?: string;
 }
 
 export const CASE_STATUS_LABEL: Record<CaseStatus, string> = {
@@ -26,12 +29,26 @@ export const CASE_STATUS_LABEL: Record<CaseStatus, string> = {
 };
 
 export const CRIME_TYPES = [
+  "Theft",
+  "Assault",
+  "Fraud",
+  "Cybercrime",
+  "Homicide",
+  "Drug-related",
+  "Trafficking",
   "Organised Crime",
-  "Cyber Fraud",
-  "Narcotics",
   "Financial Fraud",
   "Extortion",
-  "Human Trafficking",
+  "Other",
+] as const;
+
+export const PUNISHMENT_TYPES = [
+  "Imprisonment",
+  "Fine",
+  "Both",
+  "Under Trial",
+  "Acquitted",
+  "Other",
 ] as const;
 
 export const DISTRICTS = [
@@ -45,7 +62,7 @@ export const DISTRICTS = [
   "Kolkata",
 ] as const;
 
-export const caseRecords: CaseRecord[] = [
+export const seedCaseRecords: CaseRecord[] = [
   {
     id: "rec-1",
     full_name: "Ramesh Kulkarni",
@@ -76,7 +93,7 @@ export const caseRecords: CaseRecord[] = [
     duration_days: 120,
     district: "Hyderabad",
     state: "Telangana",
-    crime_type: "Narcotics",
+    crime_type: "Drug-related",
     opened_on: "2026-05-08",
   },
   {
@@ -87,7 +104,7 @@ export const caseRecords: CaseRecord[] = [
     duration_days: 12,
     district: "Bengaluru Urban",
     state: "Karnataka",
-    crime_type: "Cyber Fraud",
+    crime_type: "Cybercrime",
     opened_on: "2026-08-24",
   },
   {
@@ -109,7 +126,7 @@ export const caseRecords: CaseRecord[] = [
     duration_days: 30,
     district: "Lucknow",
     state: "Uttar Pradesh",
-    crime_type: "Human Trafficking",
+    crime_type: "Trafficking",
     opened_on: "2026-08-06",
   },
   {
@@ -142,7 +159,7 @@ export const caseRecords: CaseRecord[] = [
     duration_days: 7,
     district: "New Delhi",
     state: "Delhi",
-    crime_type: "Cyber Fraud",
+    crime_type: "Cybercrime",
     opened_on: "2026-08-29",
   },
   {
@@ -153,7 +170,7 @@ export const caseRecords: CaseRecord[] = [
     duration_days: 150,
     district: "Bengaluru Urban",
     state: "Karnataka",
-    crime_type: "Narcotics",
+    crime_type: "Drug-related",
     opened_on: "2026-04-08",
   },
 ];
