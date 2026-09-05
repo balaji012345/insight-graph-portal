@@ -1,55 +1,32 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Network } from "lucide-react";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-import { Emblem } from "@/components/auth/emblem";
-import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { AppSidebar } from "@/components/dashboard/app-sidebar";
+import { ModuleTabs } from "@/components/dashboard/module-tabs";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 export const Route = createFileRoute("/_authenticated/console")({
-  head: () => ({
-    meta: [
-      { title: "Investigator Console | NCRB Criminal Network Analysis System" },
-      {
-        name: "description",
-        content:
-          "Authenticated investigator console for the NCRB AI-Powered Criminal Network Analysis System.",
-      },
-      { property: "og:title", content: "Investigator Console | NCRB Criminal Network Analysis System" },
-      {
-        property: "og:description",
-        content: "Authenticated workspace for NCRB criminal network analysis.",
-      },
-    ],
-  }),
-  component: Console,
+  component: ConsoleLayout,
 });
 
-function Console() {
-  const navigate = useNavigate();
+function ConsoleLayout() {
   const { user } = Route.useRouteContext();
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    await navigate({ to: "/" });
-  };
-
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden surface-secure px-4 py-10">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 grid-secure" />
-      <section className="panel-official relative w-full max-w-lg rounded-xl px-6 py-8 text-center sm:px-9 sm:py-10">
-        <Emblem />
-        <div className="mt-8 flex items-center justify-center gap-2 text-gold">
-          <Network className="h-5 w-5" />
-          <h2 className="text-lg font-semibold">Access granted</h2>
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full surface-secure">
+        <AppSidebar email={user?.email} />
+
+        <div className="flex min-w-0 flex-1 flex-col">
+          <header className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-border bg-background/80 px-3 py-3 backdrop-blur sm:px-5">
+            <SidebarTrigger aria-label="Toggle sidebar" />
+            <ModuleTabs />
+          </header>
+
+          <main className="min-w-0 flex-1 px-3 py-5 sm:px-5 sm:py-6">
+            <Outlet />
+          </main>
         </div>
-        <p className="mt-3 text-sm text-muted-foreground">
-          Signed in as <span className="text-foreground">{user?.email}</span>. The network analysis workspace
-          will be connected here.
-        </p>
-        <Button type="button" variant="outline" className="mt-7" onClick={signOut}>
-          Sign out
-        </Button>
-      </section>
-    </main>
+      </div>
+    </SidebarProvider>
   );
 }
