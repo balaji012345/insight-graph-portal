@@ -15,6 +15,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedConsoleRouteImport } from './routes/_authenticated/console'
 import { Route as AuthenticatedConsoleIndexRouteImport } from './routes/_authenticated/console.index'
 import { Route as AuthenticatedConsoleCasesRouteImport } from './routes/_authenticated/console.cases'
+import { Route as AuthenticatedConsoleNetworkRouteImport } from './routes/_authenticated/console.network'
 import { Route as AuthenticatedConsoleRecordsRecordIdRouteImport } from './routes/_authenticated/console.records.$recordId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -48,6 +49,12 @@ const AuthenticatedConsoleCasesRoute =
     path: '/cases',
     getParentRoute: () => AuthenticatedConsoleRoute,
   } as any)
+const AuthenticatedConsoleNetworkRoute =
+  AuthenticatedConsoleNetworkRouteImport.update({
+    id: '/network',
+    path: '/network',
+    getParentRoute: () => AuthenticatedConsoleRoute,
+  } as any)
 const AuthenticatedConsoleRecordsRecordIdRoute =
   AuthenticatedConsoleRecordsRecordIdRouteImport.update({
     id: '/records/$recordId',
@@ -60,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/console': typeof AuthenticatedConsoleRouteWithChildren
   '/console/cases': typeof AuthenticatedConsoleCasesRoute
+  '/console/network': typeof AuthenticatedConsoleNetworkRoute
   '/console/': typeof AuthenticatedConsoleIndexRoute
   '/console/records/$recordId': typeof AuthenticatedConsoleRecordsRecordIdRoute
 }
@@ -67,6 +75,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/reset-password': typeof ResetPasswordRoute
   '/console/cases': typeof AuthenticatedConsoleCasesRoute
+  '/console/network': typeof AuthenticatedConsoleNetworkRoute
   '/console': typeof AuthenticatedConsoleIndexRoute
   '/console/records/$recordId': typeof AuthenticatedConsoleRecordsRecordIdRoute
 }
@@ -77,6 +86,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/console': typeof AuthenticatedConsoleRouteWithChildren
   '/_authenticated/console/cases': typeof AuthenticatedConsoleCasesRoute
+  '/_authenticated/console/network': typeof AuthenticatedConsoleNetworkRoute
   '/_authenticated/console/': typeof AuthenticatedConsoleIndexRoute
   '/_authenticated/console/records/$recordId': typeof AuthenticatedConsoleRecordsRecordIdRoute
 }
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/console'
     | '/console/cases'
+    | '/console/network'
     | '/console/'
     | '/console/records/$recordId'
   fileRoutesByTo: FileRoutesByTo
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/reset-password'
     | '/console/cases'
+    | '/console/network'
     | '/console'
     | '/console/records/$recordId'
   id:
@@ -103,6 +115,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/console'
     | '/_authenticated/console/cases'
+    | '/_authenticated/console/network'
     | '/_authenticated/console/'
     | '/_authenticated/console/records/$recordId'
   fileRoutesById: FileRoutesById
@@ -157,6 +170,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConsoleCasesRouteImport
       parentRoute: typeof AuthenticatedConsoleRoute
     }
+    '/_authenticated/console/network': {
+      id: '/_authenticated/console/network'
+      path: '/network'
+      fullPath: '/console/network'
+      preLoaderRoute: typeof AuthenticatedConsoleNetworkRouteImport
+      parentRoute: typeof AuthenticatedConsoleRoute
+    }
     '/_authenticated/console/records/$recordId': {
       id: '/_authenticated/console/records/$recordId'
       path: '/records/$recordId'
@@ -169,12 +189,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedConsoleRouteChildren {
   AuthenticatedConsoleCasesRoute: typeof AuthenticatedConsoleCasesRoute
+  AuthenticatedConsoleNetworkRoute: typeof AuthenticatedConsoleNetworkRoute
   AuthenticatedConsoleIndexRoute: typeof AuthenticatedConsoleIndexRoute
   AuthenticatedConsoleRecordsRecordIdRoute: typeof AuthenticatedConsoleRecordsRecordIdRoute
 }
 
 const AuthenticatedConsoleRouteChildren: AuthenticatedConsoleRouteChildren = {
   AuthenticatedConsoleCasesRoute: AuthenticatedConsoleCasesRoute,
+  AuthenticatedConsoleNetworkRoute: AuthenticatedConsoleNetworkRoute,
   AuthenticatedConsoleIndexRoute: AuthenticatedConsoleIndexRoute,
   AuthenticatedConsoleRecordsRecordIdRoute:
     AuthenticatedConsoleRecordsRecordIdRoute,
