@@ -12,7 +12,7 @@ type PasswordFieldProps = {
   onChange: (value: string) => void;
   autoComplete?: string;
   placeholder?: string;
-  error?: string;
+  error?: string | undefined;
 };
 
 export function PasswordField({
