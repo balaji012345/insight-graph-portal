@@ -16,6 +16,7 @@ import { Route as AuthenticatedConsoleRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedConsoleIndexRouteImport } from './routes/_authenticated/console.index'
 import { Route as AuthenticatedConsoleCasesRouteImport } from './routes/_authenticated/console.cases'
 import { Route as AuthenticatedConsoleNetworkRouteImport } from './routes/_authenticated/console.network'
+import { Route as AuthenticatedConsoleReportsRouteImport } from './routes/_authenticated/console.reports'
 import { Route as AuthenticatedConsoleRecordsRecordIdRouteImport } from './routes/_authenticated/console.records.$recordId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -55,6 +56,12 @@ const AuthenticatedConsoleNetworkRoute =
     path: '/network',
     getParentRoute: () => AuthenticatedConsoleRoute,
   } as any)
+const AuthenticatedConsoleReportsRoute =
+  AuthenticatedConsoleReportsRouteImport.update({
+    id: '/reports',
+    path: '/reports',
+    getParentRoute: () => AuthenticatedConsoleRoute,
+  } as any)
 const AuthenticatedConsoleRecordsRecordIdRoute =
   AuthenticatedConsoleRecordsRecordIdRouteImport.update({
     id: '/records/$recordId',
@@ -68,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/console': typeof AuthenticatedConsoleRouteWithChildren
   '/console/cases': typeof AuthenticatedConsoleCasesRoute
   '/console/network': typeof AuthenticatedConsoleNetworkRoute
+  '/console/reports': typeof AuthenticatedConsoleReportsRoute
   '/console/': typeof AuthenticatedConsoleIndexRoute
   '/console/records/$recordId': typeof AuthenticatedConsoleRecordsRecordIdRoute
 }
@@ -76,6 +84,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/console/cases': typeof AuthenticatedConsoleCasesRoute
   '/console/network': typeof AuthenticatedConsoleNetworkRoute
+  '/console/reports': typeof AuthenticatedConsoleReportsRoute
   '/console': typeof AuthenticatedConsoleIndexRoute
   '/console/records/$recordId': typeof AuthenticatedConsoleRecordsRecordIdRoute
 }
@@ -87,6 +96,7 @@ export interface FileRoutesById {
   '/_authenticated/console': typeof AuthenticatedConsoleRouteWithChildren
   '/_authenticated/console/cases': typeof AuthenticatedConsoleCasesRoute
   '/_authenticated/console/network': typeof AuthenticatedConsoleNetworkRoute
+  '/_authenticated/console/reports': typeof AuthenticatedConsoleReportsRoute
   '/_authenticated/console/': typeof AuthenticatedConsoleIndexRoute
   '/_authenticated/console/records/$recordId': typeof AuthenticatedConsoleRecordsRecordIdRoute
 }
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/console'
     | '/console/cases'
     | '/console/network'
+    | '/console/reports'
     | '/console/'
     | '/console/records/$recordId'
   fileRoutesByTo: FileRoutesByTo
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/console/cases'
     | '/console/network'
+    | '/console/reports'
     | '/console'
     | '/console/records/$recordId'
   id:
@@ -116,6 +128,7 @@ export interface FileRouteTypes {
     | '/_authenticated/console'
     | '/_authenticated/console/cases'
     | '/_authenticated/console/network'
+    | '/_authenticated/console/reports'
     | '/_authenticated/console/'
     | '/_authenticated/console/records/$recordId'
   fileRoutesById: FileRoutesById
@@ -177,6 +190,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConsoleNetworkRouteImport
       parentRoute: typeof AuthenticatedConsoleRoute
     }
+    '/_authenticated/console/reports': {
+      id: '/_authenticated/console/reports'
+      path: '/reports'
+      fullPath: '/console/reports'
+      preLoaderRoute: typeof AuthenticatedConsoleReportsRouteImport
+      parentRoute: typeof AuthenticatedConsoleRoute
+    }
     '/_authenticated/console/records/$recordId': {
       id: '/_authenticated/console/records/$recordId'
       path: '/records/$recordId'
@@ -190,6 +210,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedConsoleRouteChildren {
   AuthenticatedConsoleCasesRoute: typeof AuthenticatedConsoleCasesRoute
   AuthenticatedConsoleNetworkRoute: typeof AuthenticatedConsoleNetworkRoute
+  AuthenticatedConsoleReportsRoute: typeof AuthenticatedConsoleReportsRoute
   AuthenticatedConsoleIndexRoute: typeof AuthenticatedConsoleIndexRoute
   AuthenticatedConsoleRecordsRecordIdRoute: typeof AuthenticatedConsoleRecordsRecordIdRoute
 }
@@ -197,6 +218,7 @@ interface AuthenticatedConsoleRouteChildren {
 const AuthenticatedConsoleRouteChildren: AuthenticatedConsoleRouteChildren = {
   AuthenticatedConsoleCasesRoute: AuthenticatedConsoleCasesRoute,
   AuthenticatedConsoleNetworkRoute: AuthenticatedConsoleNetworkRoute,
+  AuthenticatedConsoleReportsRoute: AuthenticatedConsoleReportsRoute,
   AuthenticatedConsoleIndexRoute: AuthenticatedConsoleIndexRoute,
   AuthenticatedConsoleRecordsRecordIdRoute:
     AuthenticatedConsoleRecordsRecordIdRoute,
