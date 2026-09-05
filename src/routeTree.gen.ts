@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedConsoleRouteImport } from './routes/_authenticated/console'
 import { Route as AuthenticatedConsoleIndexRouteImport } from './routes/_authenticated/console.index'
+import { Route as AuthenticatedConsoleCasesRouteImport } from './routes/_authenticated/console.cases'
 import { Route as AuthenticatedConsoleRecordsRecordIdRouteImport } from './routes/_authenticated/console.records.$recordId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +42,12 @@ const AuthenticatedConsoleIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedConsoleRoute,
   } as any)
+const AuthenticatedConsoleCasesRoute =
+  AuthenticatedConsoleCasesRouteImport.update({
+    id: '/cases',
+    path: '/cases',
+    getParentRoute: () => AuthenticatedConsoleRoute,
+  } as any)
 const AuthenticatedConsoleRecordsRecordIdRoute =
   AuthenticatedConsoleRecordsRecordIdRouteImport.update({
     id: '/records/$recordId',
@@ -52,12 +59,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/reset-password': typeof ResetPasswordRoute
   '/console': typeof AuthenticatedConsoleRouteWithChildren
+  '/console/cases': typeof AuthenticatedConsoleCasesRoute
   '/console/': typeof AuthenticatedConsoleIndexRoute
   '/console/records/$recordId': typeof AuthenticatedConsoleRecordsRecordIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/console/cases': typeof AuthenticatedConsoleCasesRoute
   '/console': typeof AuthenticatedConsoleIndexRoute
   '/console/records/$recordId': typeof AuthenticatedConsoleRecordsRecordIdRoute
 }
@@ -67,6 +76,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/console': typeof AuthenticatedConsoleRouteWithChildren
+  '/_authenticated/console/cases': typeof AuthenticatedConsoleCasesRoute
   '/_authenticated/console/': typeof AuthenticatedConsoleIndexRoute
   '/_authenticated/console/records/$recordId': typeof AuthenticatedConsoleRecordsRecordIdRoute
 }
@@ -76,16 +86,23 @@ export interface FileRouteTypes {
     | '/'
     | '/reset-password'
     | '/console'
+    | '/console/cases'
     | '/console/'
     | '/console/records/$recordId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/reset-password' | '/console' | '/console/records/$recordId'
+  to:
+    | '/'
+    | '/reset-password'
+    | '/console/cases'
+    | '/console'
+    | '/console/records/$recordId'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/reset-password'
     | '/_authenticated/console'
+    | '/_authenticated/console/cases'
     | '/_authenticated/console/'
     | '/_authenticated/console/records/$recordId'
   fileRoutesById: FileRoutesById
@@ -133,6 +150,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConsoleIndexRouteImport
       parentRoute: typeof AuthenticatedConsoleRoute
     }
+    '/_authenticated/console/cases': {
+      id: '/_authenticated/console/cases'
+      path: '/cases'
+      fullPath: '/console/cases'
+      preLoaderRoute: typeof AuthenticatedConsoleCasesRouteImport
+      parentRoute: typeof AuthenticatedConsoleRoute
+    }
     '/_authenticated/console/records/$recordId': {
       id: '/_authenticated/console/records/$recordId'
       path: '/records/$recordId'
@@ -144,11 +168,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedConsoleRouteChildren {
+  AuthenticatedConsoleCasesRoute: typeof AuthenticatedConsoleCasesRoute
   AuthenticatedConsoleIndexRoute: typeof AuthenticatedConsoleIndexRoute
   AuthenticatedConsoleRecordsRecordIdRoute: typeof AuthenticatedConsoleRecordsRecordIdRoute
 }
 
 const AuthenticatedConsoleRouteChildren: AuthenticatedConsoleRouteChildren = {
+  AuthenticatedConsoleCasesRoute: AuthenticatedConsoleCasesRoute,
   AuthenticatedConsoleIndexRoute: AuthenticatedConsoleIndexRoute,
   AuthenticatedConsoleRecordsRecordIdRoute:
     AuthenticatedConsoleRecordsRecordIdRoute,
