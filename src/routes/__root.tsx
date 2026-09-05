@@ -77,23 +77,38 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "AI-Powered Criminal Network Analysis System | NCRB" },
+      {
+        name: "description",
+        content:
+          "Secure NCRB platform that uncovers hidden relationships in criminal networks using AI, ML, NLP and graph analytics.",
+      },
+      { name: "author", content: "National Crime Records Bureau" },
+      { property: "og:title", content: "AI-Powered Criminal Network Analysis System | NCRB" },
+      {
+        property: "og:description",
+        content:
+          "Secure NCRB platform for AI-assisted criminal network analysis. Authorised personnel only.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "robots", content: "noindex, nofollow" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap",
+      },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
     ],
   }),
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
