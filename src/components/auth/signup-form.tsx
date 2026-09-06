@@ -37,6 +37,7 @@ export function SignupForm({ onSwitchToLogin }: { onSwitchToLogin: () => void })
     event.preventDefault();
     const nextErrors = validate();
     setErrors(nextErrors);
+    setFormError("");
     if (Object.keys(nextErrors).length > 0) return;
 
     setSubmitting(true);
@@ -45,26 +46,40 @@ export function SignupForm({ onSwitchToLogin }: { onSwitchToLogin: () => void })
         email: email.trim(),
         password,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: { full_name: fullName.trim(), username: username.trim() },
         },
       });
       if (error) {
-        toast.error("Registration failed", { description: error.message });
+        setFormError(error.message);
         return;
       }
-      if (!data.session) {
-        setPendingEmail(email.trim());
+
+      // Session present (confirmation disabled) → straight into the console.
+      if (data.session) {
+        toast.success("Account created", { description: "You are now signed in." });
+        await navigate({ to: "/console", replace: true });
         return;
       }
-      toast.success("Account created", { description: "You are now signed in." });
-      window.location.assign("/console");
+
+      // No session returned: try an immediate sign-in, otherwise ask for confirmation.
+      const { data: signIn } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+      if (signIn.session) {
+        toast.success("Account created", { description: "You are now signed in." });
+        await navigate({ to: "/console", replace: true });
+        return;
+      }
+      setPendingEmail(email.trim());
     } catch {
-      toast.error("Registration unavailable", { description: "Please try again shortly." });
+      setFormError("Registration service is unavailable right now. Please try again shortly.");
     } finally {
       setSubmitting(false);
     }
   };
+
 
   if (pendingEmail) {
     return (
