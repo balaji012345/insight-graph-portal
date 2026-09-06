@@ -1,4 +1,6 @@
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+
 import { toast } from "sonner";
 
 import { GoogleButton } from "@/components/auth/google-button";
@@ -14,14 +16,17 @@ import { isValidEmail, isValidUsername } from "@/lib/validation";
 type Errors = Partial<Record<"fullName" | "username" | "email" | "password" | "confirm", string>>;
 
 export function SignupForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
+  const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [errors, setErrors] = useState<Errors>({});
+  const [formError, setFormError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [pendingEmail, setPendingEmail] = useState<string | null>(null);
+
 
   const validate = (): Errors => {
     const next: Errors = {};
@@ -37,6 +42,7 @@ export function SignupForm({ onSwitchToLogin }: { onSwitchToLogin: () => void })
     event.preventDefault();
     const nextErrors = validate();
     setErrors(nextErrors);
+    setFormError("");
     if (Object.keys(nextErrors).length > 0) return;
 
     setSubmitting(true);
@@ -45,26 +51,40 @@ export function SignupForm({ onSwitchToLogin }: { onSwitchToLogin: () => void })
         email: email.trim(),
         password,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: { full_name: fullName.trim(), username: username.trim() },
         },
       });
       if (error) {
-        toast.error("Registration failed", { description: error.message });
+        setFormError(error.message);
         return;
       }
-      if (!data.session) {
-        setPendingEmail(email.trim());
+
+      // Session present (confirmation disabled) → straight into the console.
+      if (data.session) {
+        toast.success("Account created", { description: "You are now signed in." });
+        await navigate({ to: "/console", replace: true });
         return;
       }
-      toast.success("Account created", { description: "You are now signed in." });
-      window.location.assign("/console");
+
+      // No session returned: try an immediate sign-in, otherwise ask for confirmation.
+      const { data: signIn } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+      if (signIn.session) {
+        toast.success("Account created", { description: "You are now signed in." });
+        await navigate({ to: "/console", replace: true });
+        return;
+      }
+      setPendingEmail(email.trim());
     } catch {
-      toast.error("Registration unavailable", { description: "Please try again shortly." });
+      setFormError("Registration service is unavailable right now. Please try again shortly.");
     } finally {
       setSubmitting(false);
     }
   };
+
 
   if (pendingEmail) {
     return (
@@ -132,6 +152,13 @@ export function SignupForm({ onSwitchToLogin }: { onSwitchToLogin: () => void })
         autoComplete="new-password"
         error={errors.confirm}
       />
+
+      {formError ? (
+        <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+          {formError}
+        </p>
+      ) : null}
+
 
       <Button type="submit" disabled={submitting} className="w-full">
         {submitting ? "Submitting…" : "Sign Up"}
