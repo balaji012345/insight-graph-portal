@@ -14,14 +14,17 @@ import { isValidEmail, isValidUsername } from "@/lib/validation";
 type Errors = Partial<Record<"fullName" | "username" | "email" | "password" | "confirm", string>>;
 
 export function SignupForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
+  const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [errors, setErrors] = useState<Errors>({});
+  const [formError, setFormError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [pendingEmail, setPendingEmail] = useState<string | null>(null);
+
 
   const validate = (): Errors => {
     const next: Errors = {};
