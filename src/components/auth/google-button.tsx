@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -5,12 +6,13 @@ import { Button } from "@/components/ui/button";
 import { lovable } from "@/integrations/lovable/index";
 
 export function GoogleButton({ label }: { label: string }) {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const signIn = async () => {
     setLoading(true);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+      redirect_uri: `${window.location.origin}/auth/callback`,
     });
 
     if (result.error) {
@@ -19,8 +21,9 @@ export function GoogleButton({ label }: { label: string }) {
       return;
     }
     if (result.redirected) return;
-    window.location.assign("/console");
+    await navigate({ to: "/console", replace: true });
   };
+
 
   return (
     <Button

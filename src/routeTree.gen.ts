@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedConsoleRouteImport } from './routes/_authenticated/console'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AuthenticatedConsoleIndexRouteImport } from './routes/_authenticated/console.index'
 import { Route as AuthenticatedConsoleCasesRouteImport } from './routes/_authenticated/console.cases'
 import { Route as AuthenticatedConsoleNetworkRouteImport } from './routes/_authenticated/console.network'
@@ -38,6 +39,11 @@ const AuthenticatedConsoleRoute = AuthenticatedConsoleRouteImport.update({
   id: '/console',
   path: '/console',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedConsoleIndexRoute =
   AuthenticatedConsoleIndexRouteImport.update({
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/reset-password': typeof ResetPasswordRoute
   '/console': typeof AuthenticatedConsoleRouteWithChildren
+  '/auth/callback': typeof AuthCallbackRoute
   '/console/cases': typeof AuthenticatedConsoleCasesRoute
   '/console/network': typeof AuthenticatedConsoleNetworkRoute
   '/console/reports': typeof AuthenticatedConsoleReportsRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/console/cases': typeof AuthenticatedConsoleCasesRoute
   '/console/network': typeof AuthenticatedConsoleNetworkRoute
   '/console/reports': typeof AuthenticatedConsoleReportsRoute
@@ -103,6 +111,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/console': typeof AuthenticatedConsoleRouteWithChildren
+  '/auth/callback': typeof AuthCallbackRoute
   '/_authenticated/console/cases': typeof AuthenticatedConsoleCasesRoute
   '/_authenticated/console/network': typeof AuthenticatedConsoleNetworkRoute
   '/_authenticated/console/reports': typeof AuthenticatedConsoleReportsRoute
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/'
     | '/reset-password'
     | '/console'
+    | '/auth/callback'
     | '/console/cases'
     | '/console/network'
     | '/console/reports'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/reset-password'
+    | '/auth/callback'
     | '/console/cases'
     | '/console/network'
     | '/console/reports'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/reset-password'
     | '/_authenticated/console'
+    | '/auth/callback'
     | '/_authenticated/console/cases'
     | '/_authenticated/console/network'
     | '/_authenticated/console/reports'
@@ -150,6 +162,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   ResetPasswordRoute: typeof ResetPasswordRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -181,6 +194,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/console'
       preLoaderRoute: typeof AuthenticatedConsoleRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/console/': {
       id: '/_authenticated/console/'
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   ResetPasswordRoute: ResetPasswordRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
