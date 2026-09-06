@@ -175,6 +175,9 @@ export const seedCaseRecords: CaseRecord[] = [
   },
 ];
 
+/** Working dataset used by the UI (swap for live data later). */
+export const caseRecords: CaseRecord[] = [...seedCaseRecords];
+
 export function caseDurationLabel(record: CaseRecord): string {
   const prefix = record.status === "closed" ? "Closed" : "Ongoing";
   return `${prefix} - ${record.duration_days} days`;
