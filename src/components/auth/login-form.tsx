@@ -21,32 +21,42 @@ export function LoginForm({ onForgotUsername, onForgotPassword, onSwitchToSignup
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ identifier?: string; password?: string }>({});
+  const [formError, setFormError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     const nextErrors: typeof errors = {};
-    if (!identifier.trim()) nextErrors.identifier = "Username is required.";
+    if (!identifier.trim()) nextErrors.identifier = "Username or email is required.";
     if (!password) nextErrors.password = "Password is required.";
     setErrors(nextErrors);
+    setFormError("");
     if (Object.keys(nextErrors).length > 0) return;
 
     setSubmitting(true);
     try {
       const { email } = await resolveLoginEmail({ data: { identifier: identifier.trim() } });
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        toast.error("Access denied", { description: "Invalid credentials. Please verify and retry." });
+        const message = /confirm/i.test(error.message)
+          ? "This account is not confirmed yet. Please confirm your email and retry."
+          : "Invalid username or password. Please verify your credentials and retry.";
+        setFormError(message);
+        return;
+      }
+      if (!data.session) {
+        setFormError("Sign-in could not be completed. Please try again.");
         return;
       }
       toast.success("Authentication successful");
-      await navigate({ to: "/console" });
+      await navigate({ to: "/console", replace: true });
     } catch {
-      toast.error("Sign-in unavailable", { description: "Please try again shortly." });
+      setFormError("Sign-in service is unavailable right now. Please try again shortly.");
     } finally {
       setSubmitting(false);
     }
   };
+
 
   return (
     <form onSubmit={submit} className="space-y-5" noValidate>
