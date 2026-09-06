@@ -153,6 +153,13 @@ export function SignupForm({ onSwitchToLogin }: { onSwitchToLogin: () => void })
         error={errors.confirm}
       />
 
+      {formError ? (
+        <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+          {formError}
+        </p>
+      ) : null}
+
+
       <Button type="submit" disabled={submitting} className="w-full">
         {submitting ? "Submitting…" : "Sign Up"}
       </Button>
